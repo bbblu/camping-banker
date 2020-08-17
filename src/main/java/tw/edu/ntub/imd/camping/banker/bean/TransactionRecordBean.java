@@ -3,15 +3,15 @@ package tw.edu.ntub.imd.camping.banker.bean;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PositiveOrZero;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 
 @Data
 @EqualsAndHashCode
 public class TransactionRecordBean {
+    @Null(message = "編號 - 不得事先填寫")
+    private Integer id;
+
     @NotBlank(message = "信用卡卡號 - 未填寫")
     @Size(min = 16, max = 16, message = "信用卡卡號 - 應為16個字")
 //    @CreditCardNumber(message = "信用卡卡號 - 格式不符")

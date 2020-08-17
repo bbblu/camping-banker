@@ -7,6 +7,7 @@ import tw.edu.ntub.imd.camping.banker.bean.TransactionRecordBean;
 import tw.edu.ntub.imd.camping.banker.service.TransactionRecordService;
 import tw.edu.ntub.imd.camping.banker.util.http.BindingResultUtils;
 import tw.edu.ntub.imd.camping.banker.util.http.ResponseEntityBuilder;
+import tw.edu.ntub.imd.camping.banker.util.json.object.SingleValueObjectData;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
@@ -26,8 +27,11 @@ public class TransactionRecordController {
             BindingResult bindingResult
     ) {
         BindingResultUtils.validate(bindingResult);
-        transactionRecordService.save(transactionRecordBean);
-        return ResponseEntityBuilder.success().message("交易成功").build();
+        TransactionRecordBean saveResult = transactionRecordService.save(transactionRecordBean);
+        return ResponseEntityBuilder.success()
+                .message("交易成功")
+                .data(SingleValueObjectData.create("id", saveResult.getId()))
+                .build();
     }
 
     @PostMapping(path = "/{id}/debit")
