@@ -1,0 +1,2 @@
+rootProject.name = 'banker'
+include 'modules:camping-banker-config', 'modules:camping-banker-database-config'
