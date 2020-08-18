@@ -74,6 +74,30 @@ public class TransactionRecord {
     private Integer money;
 
     /**
+     * 收款人信用卡卡號
+     *
+     * @since 1.0.0
+     */
+    @Column(name = "payee_card_id", length = 16, nullable = false)
+    private String payeeCardId;
+
+    /**
+     * 收款人安全碼
+     *
+     * @since 1.0.0
+     */
+    @Column(name = "payee_safe_code", length = 3, nullable = false)
+    private String payeeSafeCode;
+
+    /**
+     * 收款人過期時間
+     *
+     * @since 1.0.0
+     */
+    @Column(name = "payee_expire_date", nullable = false)
+    private LocalDate payeeExpireDate;
+
+    /**
      * 是否已經扣款(0: 未扣款/ 1: 已扣款)
      *
      * @since 1.0.0
@@ -167,6 +191,20 @@ public class TransactionRecord {
             @JoinColumn(name = "expire_date", referencedColumnName = "expire_date", nullable = false, insertable = false, updatable = false)
     })
     private CreditCard creditCardByCardId;
+
+    /**
+     * 收款人信用卡資料
+     *
+     * @see CreditCard
+     * @since 1.0.0
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumns({
+            @JoinColumn(name = "payee_card_id", referencedColumnName = "card_id", nullable = false, insertable = false, updatable = false),
+            @JoinColumn(name = "payee_safe_code", referencedColumnName = "safe_code", nullable = false, insertable = false, updatable = false),
+            @JoinColumn(name = "payee_expire_date", referencedColumnName = "expire_date", nullable = false, insertable = false, updatable = false)
+    })
+    private CreditCard creditCardByPayeeCardId;
 
     /**
      * 是否已經扣款(0: 未扣款/ 1: 已扣款)

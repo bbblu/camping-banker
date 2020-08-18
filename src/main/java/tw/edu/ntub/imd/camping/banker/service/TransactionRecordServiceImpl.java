@@ -62,9 +62,13 @@ public class TransactionRecordServiceImpl
         if (BooleanUtils.isFalse(transactionRecord.isDebit())) {
             transactionRecordDAO.updateDebitById(id, true);
             CreditCard creditCard = transactionRecord.getCreditCardByCardId();
+            CreditCard payeeCreditCard = transactionRecord.getCreditCardByPayeeCardId();
             CreditCard lockedCreditCard = creditCardDAO.findById(creditCard.getId()).orElseThrow();
+            CreditCard lockedPayeeCreditCard = creditCardDAO.findById(payeeCreditCard.getId()).orElseThrow();
             lockedCreditCard.setBalance(lockedCreditCard.getBalance() - transactionRecord.getMoney());
+            lockedPayeeCreditCard.setBalance(lockedPayeeCreditCard.getBalance() + transactionRecord.getMoney());
             creditCardDAO.saveAndFlush(lockedCreditCard);
+            creditCardDAO.saveAndFlush(lockedPayeeCreditCard);
         } else {
             throw new DebitedException();
         }
