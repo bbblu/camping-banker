@@ -206,6 +206,22 @@ public class TransactionRecord {
     })
     private CreditCard creditCardByPayeeCardId;
 
+    public CreditCardId getCreditCardId() {
+        CreditCardId result = new CreditCardId();
+        result.setCardId(cardId);
+        result.setSafeCode(safeCode);
+        result.setExpireDate(expireDate);
+        return result;
+    }
+
+    public CreditCardId getPayeeCreditCardId() {
+        CreditCardId result = new CreditCardId();
+        result.setCardId(payeeCardId);
+        result.setSafeCode(payeeSafeCode);
+        result.setExpireDate(payeeExpireDate);
+        return result;
+    }
+
     /**
      * 是否已經扣款(0: 未扣款/ 1: 已扣款)
      *
