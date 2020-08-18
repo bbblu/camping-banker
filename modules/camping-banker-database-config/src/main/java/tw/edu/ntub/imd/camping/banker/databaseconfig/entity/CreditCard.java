@@ -70,4 +70,12 @@ public class CreditCard implements Persistable<CreditCardId> {
     public boolean isNew() {
         return save;
     }
+
+    public void plusBalance(Integer delta) {
+        if (balance != null) {
+            balance = balance + delta;
+        } else {
+            balance = delta;
+        }
+    }
 }

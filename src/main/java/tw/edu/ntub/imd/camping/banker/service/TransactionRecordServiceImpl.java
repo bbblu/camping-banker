@@ -65,8 +65,8 @@ public class TransactionRecordServiceImpl
             CreditCard payeeCreditCard = transactionRecord.getCreditCardByPayeeCardId();
             CreditCard lockedCreditCard = creditCardDAO.findById(creditCard.getId()).orElseThrow();
             CreditCard lockedPayeeCreditCard = creditCardDAO.findById(payeeCreditCard.getId()).orElseThrow();
-            lockedCreditCard.setBalance(lockedCreditCard.getBalance() - transactionRecord.getMoney());
-            lockedPayeeCreditCard.setBalance(lockedPayeeCreditCard.getBalance() + transactionRecord.getMoney());
+            lockedCreditCard.plusBalance(-transactionRecord.getMoney());
+            lockedPayeeCreditCard.plusBalance(transactionRecord.getMoney());
             creditCardDAO.saveAndFlush(lockedCreditCard);
             creditCardDAO.saveAndFlush(lockedPayeeCreditCard);
         } else {
