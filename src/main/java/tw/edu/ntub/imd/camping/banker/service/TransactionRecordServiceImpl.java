@@ -61,15 +61,16 @@ public class TransactionRecordServiceImpl
                 transactionRecordDAO.findById(id).orElseThrow(() -> new NotFoundException("無此交易紀錄"));
         if (BooleanUtils.isFalse(transactionRecord.isDebit())) {
             transactionRecordDAO.updateDebitById(id, true);
-            CreditCard lockedCreditCard = creditCardDAO.findById(transactionRecord.getCreditCardId()).orElseThrow();
-            lockedCreditCard.plusBalance(-transactionRecord.getMoney());
-            creditCardDAO.saveAndFlush(lockedCreditCard);
-            
-            CreditCard lockedPayeeCreditCard = creditCardDAO.findById(transactionRecord.getPayeeCreditCardId()).orElseThrow();
-            lockedPayeeCreditCard.plusBalance(transactionRecord.getMoney());
-            creditCardDAO.saveAndFlush(lockedPayeeCreditCard);
+            updateCreditCardBalance(transactionRecord.getCreditCardId(), -transactionRecord.getMoney());
+            updateCreditCardBalance(transactionRecord.getPayeeCreditCardId(), transactionRecord.getMoney());
         } else {
             throw new DebitedException();
         }
+    }
+
+    private void updateCreditCardBalance(CreditCardId creditCardId, int money) {
+        CreditCard lockedCreditCard = creditCardDAO.findById(creditCardId).orElseThrow();
+        lockedCreditCard.plusBalance(money);
+        creditCardDAO.saveAndFlush(lockedCreditCard);
     }
 }
