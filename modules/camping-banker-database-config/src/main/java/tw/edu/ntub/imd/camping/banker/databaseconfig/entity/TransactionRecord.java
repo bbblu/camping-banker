@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
  * @since 1.0.0
  */
 @Data
-@EqualsAndHashCode
+@EqualsAndHashCode(exclude = {"creditCardByCardId", "bankAccountByPayeeBankAccount"})
 @Entity
 @EntityListeners(TransactionRecordListener.class)
 @Table(name = "transaction_record", schema = Config.DATABASE_NAME)
@@ -78,24 +78,8 @@ public class TransactionRecord {
      *
      * @since 1.0.0
      */
-    @Column(name = "payee_card_id", length = 16, nullable = false)
-    private String payeeCardId;
-
-    /**
-     * 收款人安全碼
-     *
-     * @since 1.0.0
-     */
-    @Column(name = "payee_safe_code", length = 3, nullable = false)
-    private String payeeSafeCode;
-
-    /**
-     * 收款人過期時間
-     *
-     * @since 1.0.0
-     */
-    @Column(name = "payee_expire_date", nullable = false)
-    private LocalDate payeeExpireDate;
+    @Column(name = "payee_bank_account", length = 16)
+    private String payeeBankAccount;
 
     /**
      * 是否已經扣款(0: 未扣款/ 1: 已扣款)
@@ -192,33 +176,15 @@ public class TransactionRecord {
     })
     private CreditCard creditCardByCardId;
 
-    /**
-     * 收款人信用卡資料
-     *
-     * @see CreditCard
-     * @since 1.0.0
-     */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumns({
-            @JoinColumn(name = "payee_card_id", referencedColumnName = "card_id", nullable = false, insertable = false, updatable = false),
-            @JoinColumn(name = "payee_safe_code", referencedColumnName = "safe_code", nullable = false, insertable = false, updatable = false),
-            @JoinColumn(name = "payee_expire_date", referencedColumnName = "expire_date", nullable = false, insertable = false, updatable = false)
-    })
-    private CreditCard creditCardByPayeeCardId;
+    @JoinColumn(name = "payee_bank_account", referencedColumnName = "account", nullable = false, insertable = false, updatable = false)
+    private BankAccount bankAccountByPayeeBankAccount;
 
     public CreditCardId getCreditCardId() {
         CreditCardId result = new CreditCardId();
         result.setCardId(cardId);
         result.setSafeCode(safeCode);
         result.setExpireDate(expireDate);
-        return result;
-    }
-
-    public CreditCardId getPayeeCreditCardId() {
-        CreditCardId result = new CreditCardId();
-        result.setCardId(payeeCardId);
-        result.setSafeCode(payeeSafeCode);
-        result.setExpireDate(payeeExpireDate);
         return result;
     }
 

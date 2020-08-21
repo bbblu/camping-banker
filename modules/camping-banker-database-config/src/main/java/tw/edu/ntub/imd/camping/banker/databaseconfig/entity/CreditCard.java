@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.lang.NonNull;
 import tw.edu.ntub.imd.camping.banker.databaseconfig.Config;
+import tw.edu.ntub.imd.camping.banker.databaseconfig.entity.view.CreditCardBalance;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -14,7 +15,7 @@ import java.time.LocalDate;
  * @since 1.0.0
  */
 @Data
-@EqualsAndHashCode
+@EqualsAndHashCode(exclude = "bankAccountByBankAccount")
 @Entity
 @Table(name = "credit_card", schema = Config.DATABASE_NAME)
 @IdClass(CreditCardId.class)
@@ -49,12 +50,30 @@ public class CreditCard implements Persistable<CreditCardId> {
     private LocalDate expireDate;
 
     /**
-     * 餘額
+     * 銀行帳號
      *
      * @since 1.0.0
      */
-    @Column(name = "balance", nullable = false)
-    private Integer balance;
+    @Column(name = "bank_account", length = 16, nullable = false)
+    private String bankAccount;
+
+    /**
+     * 銀行帳號
+     *
+     * @see BankAccount
+     * @since 1.0.0
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bank_account", referencedColumnName = "account", nullable = false, insertable = false, updatable = false)
+    private BankAccount bankAccountByBankAccount;
+
+    @ManyToOne
+    @JoinColumn(name = "card_id", referencedColumnName = "card_id", nullable = false, insertable = false, updatable = false)
+    private CreditCardBalance creditCardBalanceByCardId;
+
+    public Integer getBalance() {
+        return creditCardBalanceByCardId.getBalance();
+    }
 
     @NonNull
     @Override
@@ -69,13 +88,5 @@ public class CreditCard implements Persistable<CreditCardId> {
     @Override
     public boolean isNew() {
         return save;
-    }
-
-    public void plusBalance(Integer delta) {
-        if (balance != null) {
-            balance = balance + delta;
-        } else {
-            balance = delta;
-        }
     }
 }

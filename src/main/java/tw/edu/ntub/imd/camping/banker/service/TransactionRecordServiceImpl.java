@@ -4,8 +4,10 @@ import org.springframework.stereotype.Service;
 import tw.edu.ntub.birc.common.util.BooleanUtils;
 import tw.edu.ntub.birc.common.util.JavaBeanUtils;
 import tw.edu.ntub.imd.camping.banker.bean.TransactionRecordBean;
+import tw.edu.ntub.imd.camping.banker.databaseconfig.dao.BankAccountDAO;
 import tw.edu.ntub.imd.camping.banker.databaseconfig.dao.CreditCardDAO;
 import tw.edu.ntub.imd.camping.banker.databaseconfig.dao.TransactionRecordDAO;
+import tw.edu.ntub.imd.camping.banker.databaseconfig.entity.BankAccount;
 import tw.edu.ntub.imd.camping.banker.databaseconfig.entity.CreditCard;
 import tw.edu.ntub.imd.camping.banker.databaseconfig.entity.CreditCardId;
 import tw.edu.ntub.imd.camping.banker.databaseconfig.entity.TransactionRecord;
@@ -23,16 +25,18 @@ public class TransactionRecordServiceImpl
     private final TransactionRecordDAO transactionRecordDAO;
     private final TransactionRecordTransformer transformer;
     private final CreditCardDAO creditCardDAO;
+    private final BankAccountDAO bankAccountDAO;
 
     public TransactionRecordServiceImpl(
             TransactionRecordDAO transactionRecordDAO,
             TransactionRecordTransformer transformer,
-            CreditCardDAO creditCardDAO
-    ) {
+            CreditCardDAO creditCardDAO,
+            BankAccountDAO bankAccountDAO) {
         super(transactionRecordDAO, transformer);
         this.transactionRecordDAO = transactionRecordDAO;
         this.transformer = transformer;
         this.creditCardDAO = creditCardDAO;
+        this.bankAccountDAO = bankAccountDAO;
     }
 
     @Override
@@ -61,16 +65,25 @@ public class TransactionRecordServiceImpl
                 transactionRecordDAO.findById(id).orElseThrow(() -> new NotFoundException("無此交易紀錄"));
         if (BooleanUtils.isFalse(transactionRecord.isDebit())) {
             transactionRecordDAO.updateDebitById(id, true);
-            updateCreditCardBalance(transactionRecord.getCreditCardId(), -transactionRecord.getMoney());
-            updateCreditCardBalance(transactionRecord.getPayeeCreditCardId(), transactionRecord.getMoney());
+            plusMoneyAndUpdateCreditCardBalance(transactionRecord.getCreditCardId(), -transactionRecord.getMoney());
+            plusMoneyAndUpdateBankAccount(transactionRecord.getPayeeBankAccount(), transactionRecord.getMoney());
         } else {
             throw new DebitedException();
         }
     }
 
-    private void updateCreditCardBalance(CreditCardId creditCardId, int money) {
-        CreditCard lockedCreditCard = creditCardDAO.findById(creditCardId).orElseThrow();
-        lockedCreditCard.plusBalance(money);
-        creditCardDAO.saveAndFlush(lockedCreditCard);
+    private void plusMoneyAndUpdateCreditCardBalance(CreditCardId creditCardId, int money) {
+        plusMoneyAndUpdateBankAccount(
+                creditCardDAO.findById(creditCardId)
+                        .map(CreditCard::getBankAccount)
+                        .orElseThrow(),
+                money
+        );
+    }
+
+    private void plusMoneyAndUpdateBankAccount(String bankAccount, int money) {
+        BankAccount lockedBankAccount = bankAccountDAO.findById(bankAccount).orElseThrow();
+        lockedBankAccount.plusMoney(money);
+        bankAccountDAO.save(lockedBankAccount);
     }
 }
