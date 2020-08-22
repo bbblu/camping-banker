@@ -31,7 +31,7 @@ public class BankAccount {
      *
      * @since 1.0.0
      */
-    @Column(name = "bank_id", length = 3, nullable = false)
+    @Column(name = "bank_id", length = 3)
     private String bankId;
 
     /**
@@ -40,7 +40,7 @@ public class BankAccount {
      * @since 1.0.0
      */
     @Enumerated
-    @Column(name = "bank_type", length = 1, nullable = false)
+    @Column(name = "bank_type", length = 1)
     private BankType bankType;
 
     /**
@@ -48,7 +48,7 @@ public class BankAccount {
      *
      * @since 1.0.0
      */
-    @Column(name = "bank_name", length = 40, nullable = false)
+    @Column(name = "bank_name", length = 40)
     private String bankName;
 
     /**
