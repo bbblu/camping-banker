@@ -28,7 +28,7 @@ public class BankController {
 
     private void addBankToObjectData(ObjectData bankData, BankBean bank) {
         bankData.add("id", bank.getId());
-        bankData.add("type", bank.getTypeName());
+        bankData.add("type", bank.getType().ordinal());
         bankData.add("name", bank.getName());
     }
 }
