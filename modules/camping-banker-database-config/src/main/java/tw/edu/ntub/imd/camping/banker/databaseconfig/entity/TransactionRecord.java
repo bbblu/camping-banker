@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
  * @since 1.0.0
  */
 @Data
-@EqualsAndHashCode(exclude = {"creditCardByCardId", "bankAccountByPayeeBankAccount"})
+@EqualsAndHashCode(exclude = "bankAccountByPayeeBankAccount")
 @Entity
 @EntityListeners(TransactionRecordListener.class)
 @Table(name = "transaction_record", schema = Config.DATABASE_NAME)
@@ -160,20 +160,6 @@ public class TransactionRecord {
      */
     @Column(name = "last_modify_date", nullable = false)
     private LocalDateTime lastModifyDate;
-
-    /**
-     * 信用卡資料
-     *
-     * @see CreditCard
-     * @since 1.0.0
-     */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumns({
-            @JoinColumn(name = "card_id", referencedColumnName = "card_id", nullable = false, insertable = false, updatable = false),
-            @JoinColumn(name = "safe_code", referencedColumnName = "safe_code", nullable = false, insertable = false, updatable = false),
-            @JoinColumn(name = "expire_date", referencedColumnName = "expire_date", nullable = false, insertable = false, updatable = false)
-    })
-    private CreditCard creditCardByCardId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "payee_bank_account", referencedColumnName = "account", nullable = false, insertable = false, updatable = false)
