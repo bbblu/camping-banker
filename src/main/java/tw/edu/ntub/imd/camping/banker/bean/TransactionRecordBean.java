@@ -30,7 +30,7 @@ public class TransactionRecordBean {
     private Integer money;
 
     @NotBlank(message = "收款人銀行帳戶 - 未填寫")
-    @Size(min = 16, max = 16, message = "收款人銀行帳戶 - 應為16個字")
+    @Pattern(regexp = "^[0-9]{10,16}$", message = "收款人銀行帳戶 - 應為10到16個字")
     private String payeeBankAccount;
 
     @NotBlank(message = "帳單地址 - 未填寫")
