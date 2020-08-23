@@ -3,15 +3,15 @@ package tw.edu.ntub.imd.camping.banker.bean;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PositiveOrZero;
-import javax.validation.constraints.Size;
-import java.time.LocalDate;
+import javax.validation.constraints.*;
+import java.time.YearMonth;
 
 @Data
 @EqualsAndHashCode
 public class TransactionRecordBean {
+    @Null(message = "編號 - 不得事先填寫")
+    private Integer id;
+
     @NotBlank(message = "信用卡卡號 - 未填寫")
     @Size(min = 16, max = 16, message = "信用卡卡號 - 應為16個字")
 //    @CreditCardNumber(message = "信用卡卡號 - 格式不符")
@@ -22,11 +22,16 @@ public class TransactionRecordBean {
     private String safeCode;
 
     @NotNull(message = "過期時間 - 未填寫")
-    private LocalDate expireDate;
+    @Future(message = "過期時間 - 應為未來時間")
+    private YearMonth expireDate;
 
     @NotNull(message = "交易金額 - 未填寫")
     @PositiveOrZero(message = "交易金額 - 應為大於等於0的數字")
     private Integer money;
+
+    @NotBlank(message = "收款人銀行帳戶 - 未填寫")
+    @Pattern(regexp = "^[0-9]{10,16}$", message = "收款人銀行帳戶 - 應為10到16個字")
+    private String payeeBankAccount;
 
     @NotBlank(message = "帳單地址 - 未填寫")
     @Size(max = 300, message = "帳單地址 - 輸入字數大於{max}個字")

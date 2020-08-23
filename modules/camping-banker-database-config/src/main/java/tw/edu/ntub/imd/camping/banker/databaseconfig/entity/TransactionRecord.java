@@ -8,7 +8,6 @@ import tw.edu.ntub.imd.camping.banker.databaseconfig.Config;
 import tw.edu.ntub.imd.camping.banker.databaseconfig.entity.listener.TransactionRecordListener;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -17,7 +16,7 @@ import java.time.LocalDateTime;
  * @since 1.0.0
  */
 @Data
-@EqualsAndHashCode
+@EqualsAndHashCode(exclude = "bankAccountByPayeeBankAccount")
 @Entity
 @EntityListeners(TransactionRecordListener.class)
 @Table(name = "transaction_record", schema = Config.DATABASE_NAME)
@@ -62,8 +61,8 @@ public class TransactionRecord {
      *
      * @since 1.0.0
      */
-    @Column(name = "expire_date", nullable = false)
-    private LocalDate expireDate;
+    @Column(name = "expire_date", length = 5, nullable = false)
+    private String expireDate;
 
     /**
      * 交易金額
@@ -72,6 +71,14 @@ public class TransactionRecord {
      */
     @Column(name = "money", nullable = false)
     private Integer money;
+
+    /**
+     * 收款人銀行帳戶
+     *
+     * @since 1.0.0
+     */
+    @Column(name = "payee_bank_account", length = 16)
+    private String payeeBankAccount;
 
     /**
      * 是否已經扣款(0: 未扣款/ 1: 已扣款)
@@ -154,19 +161,9 @@ public class TransactionRecord {
     @Column(name = "last_modify_date", nullable = false)
     private LocalDateTime lastModifyDate;
 
-    /**
-     * 信用卡資料
-     *
-     * @see CreditCard
-     * @since 1.0.0
-     */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumns({
-            @JoinColumn(name = "card_id", referencedColumnName = "card_id", nullable = false, insertable = false, updatable = false),
-            @JoinColumn(name = "safe_code", referencedColumnName = "safe_code", nullable = false, insertable = false, updatable = false),
-            @JoinColumn(name = "expire_date", referencedColumnName = "expire_date", nullable = false, insertable = false, updatable = false)
-    })
-    private CreditCard creditCardByCardId;
+    @JoinColumn(name = "payee_bank_account", referencedColumnName = "account", nullable = false, insertable = false, updatable = false)
+    private BankAccount bankAccountByPayeeBankAccount;
 
     /**
      * 是否已經扣款(0: 未扣款/ 1: 已扣款)

@@ -3,8 +3,11 @@ package tw.edu.ntub.imd.camping.banker.bean;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.validation.constraints.*;
-import java.time.LocalDate;
+import javax.validation.constraints.Future;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.time.YearMonth;
 
 @Data
 @EqualsAndHashCode
@@ -20,9 +23,5 @@ public class CreditCardBean {
 
     @NotNull(message = "過期時間 - 未填寫")
     @Future(message = "過期時間 - 應為未來時間")
-    private LocalDate expireDate;
-
-    @NotNull(message = "餘額 - 未填寫")
-    @PositiveOrZero(message = "餘額 - 應為大於等於0的數字")
-    private Integer balance;
+    private YearMonth expireDate;
 }
