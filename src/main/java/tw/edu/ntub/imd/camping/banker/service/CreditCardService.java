@@ -1,8 +1,8 @@
 package tw.edu.ntub.imd.camping.banker.service;
 
 import tw.edu.ntub.imd.camping.banker.bean.CreditCardBean;
-import tw.edu.ntub.imd.camping.banker.databaseconfig.entity.CreditCardId;
+import tw.edu.ntub.imd.camping.banker.databaseconfig.entity.CreditCard;
 
-public interface CreditCardService extends BaseService<CreditCardBean, CreditCardId> {
+public interface CreditCardService extends BaseService<CreditCardBean, CreditCard> {
 
 }

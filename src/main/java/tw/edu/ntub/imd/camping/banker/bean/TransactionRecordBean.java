@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.time.YearMonth;
 
 @Data
 @EqualsAndHashCode
@@ -22,7 +23,7 @@ public class TransactionRecordBean {
     private String safeCode;
 
     @NotNull(message = "過期時間 - 未填寫")
-    private LocalDate expireDate;
+    private YearMonth expireDate;
 
     @NotNull(message = "交易金額 - 未填寫")
     @PositiveOrZero(message = "交易金額 - 應為大於等於0的數字")

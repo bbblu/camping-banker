@@ -8,7 +8,6 @@ import tw.edu.ntub.imd.camping.banker.databaseconfig.Config;
 import tw.edu.ntub.imd.camping.banker.databaseconfig.entity.listener.TransactionRecordListener;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -62,8 +61,8 @@ public class TransactionRecord {
      *
      * @since 1.0.0
      */
-    @Column(name = "expire_date", nullable = false)
-    private LocalDate expireDate;
+    @Column(name = "expire_date", length = 5, nullable = false)
+    private String expireDate;
 
     /**
      * 交易金額
@@ -179,14 +178,6 @@ public class TransactionRecord {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "payee_bank_account", referencedColumnName = "account", nullable = false, insertable = false, updatable = false)
     private BankAccount bankAccountByPayeeBankAccount;
-
-    public CreditCardId getCreditCardId() {
-        CreditCardId result = new CreditCardId();
-        result.setCardId(cardId);
-        result.setSafeCode(safeCode);
-        result.setExpireDate(expireDate);
-        return result;
-    }
 
     /**
      * 是否已經扣款(0: 未扣款/ 1: 已扣款)
