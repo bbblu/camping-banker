@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.*;
-import java.time.LocalDate;
 import java.time.YearMonth;
 
 @Data
@@ -23,23 +22,16 @@ public class TransactionRecordBean {
     private String safeCode;
 
     @NotNull(message = "過期時間 - 未填寫")
+    @Future(message = "過期時間 - 應為未來時間")
     private YearMonth expireDate;
 
     @NotNull(message = "交易金額 - 未填寫")
     @PositiveOrZero(message = "交易金額 - 應為大於等於0的數字")
     private Integer money;
 
-    @NotBlank(message = "收款人信用卡卡號 - 未填寫")
-    @Size(min = 16, max = 16, message = "收款人信用卡卡號 - 應為16個字")
-//    @CreditCardNumber(message = "收款人信用卡卡號 - 格式不符")
-    private String payeeCardId;
-
-    @NotBlank(message = "收款人安全碼 - 未填寫")
-    @Size(min = 3, max = 4, message = "收款人安全碼 - 應為{min}到{max}個字")
-    private String payeeSafeCode;
-
-    @NotNull(message = "收款人過期時間 - 未填寫")
-    private LocalDate payeeExpireDate;
+    @NotBlank(message = "收款人銀行帳戶 - 未填寫")
+    @Size(min = 16, max = 16, message = "收款人銀行帳戶 - 應為16個字")
+    private String payeeBankAccount;
 
     @NotBlank(message = "帳單地址 - 未填寫")
     @Size(max = 300, message = "帳單地址 - 輸入字數大於{max}個字")

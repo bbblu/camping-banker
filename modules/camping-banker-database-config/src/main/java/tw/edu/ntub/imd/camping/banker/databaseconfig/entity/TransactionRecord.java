@@ -73,7 +73,7 @@ public class TransactionRecord {
     private Integer money;
 
     /**
-     * 收款人信用卡卡號
+     * 收款人銀行帳戶
      *
      * @since 1.0.0
      */
